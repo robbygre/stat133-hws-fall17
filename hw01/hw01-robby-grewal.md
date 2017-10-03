@@ -12,8 +12,8 @@ ls()
     ## [1] "experience" "player"     "points"     "points1"    "points2"   
     ## [6] "points3"    "position"   "salary"     "team"
 
-Research Question
-=================
+Research Question\_
+===================
 
 1) A Bit of Data Preprocessing
 ------------------------------
@@ -100,8 +100,7 @@ typeof(exp_int)
 
     ## [1] "integer"
 
-Position as a Factor
-====================
+### Position as a Factor
 
 ``` r
 pos_factor <- factor(position, labels = c("center", "small_fwd", "power_fwd", "shoot_guard", "point_guard"))
@@ -112,4 +111,223 @@ table(pos_factor)
     ##      center   small_fwd   power_fwd shoot_guard point_guard 
     ##          89          89          85          83          95
 
-\# Scatterplot
+\#\# 2) Scatterplot
+
+``` r
+plot(points, sal_millions, xlab = "Points", ylab = "Salary (in Millions)", main = "Points and Salary")
+```
+
+![](hw01-robby-grewal_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-4-1.png)
+
+3) Correlation between Points and Salary
+----------------------------------------
+
+``` r
+# number of individuals 
+n = 441
+
+# mean of variable X (points)
+mean_x = sum(points)/n
+mean_x
+```
+
+    ## [1] 546.6054
+
+``` r
+# mean of variable Y (salary)
+mean_y = sum(sal_millions)/n
+mean_y
+```
+
+    ## [1] 6.186689
+
+``` r
+# var(X): variance of X
+var_x = sum((points - mean_x)^2)/(n-1)
+var_x
+```
+
+    ## [1] 239136.2
+
+``` r
+# var(Y): variance of y
+var_y = sum((sal_millions - mean_y)^2)/(n-1)
+var_y
+```
+
+    ## [1] 43.19524
+
+``` r
+# sd(X): standard deviation of X
+sd_x = sqrt(var_x)
+sd_x
+```
+
+    ## [1] 489.0156
+
+``` r
+#sd(Y): standard deviation of Y
+sd_y = sqrt(var_y)
+sd_y
+```
+
+    ## [1] 6.572309
+
+``` r
+#cov(X,Y): covariance between X and Y
+cov_xy = sum((points - mean_x) * (sal_millions - mean_y)) / (n - 1)
+cov_xy
+```
+
+    ## [1] 2046.424
+
+``` r
+#cor(X,Y): correlation between X  and Y
+cor_xy = cov_xy/(sd_x * sd_y)
+cor_xy
+```
+
+    ## [1] 0.6367296
+
+``` r
+cor(points, salary)
+```
+
+    ## [1] 0.6367043
+
+4) Simple Linear Regression
+---------------------------
+
+``` r
+b1 = round(cor_xy * (sd_y / sd_x), digit = 3)
+b1
+```
+
+    ## [1] 0.009
+
+``` r
+b0 = round(mean_y - (b1 * mean_x), digit = 3)
+b0
+```
+
+    ## [1] 1.267
+
+``` r
+Y = b0 + (b1 * points)
+summary(Y)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##   1.267   2.671   5.155   6.186   8.287  24.289
+
+``` r
+b0 + b1 * 0
+```
+
+    ## [1] 1.267
+
+``` r
+Y_100 = b0 + (b1 * 100)
+Y_100
+```
+
+    ## [1] 2.167
+
+``` r
+Y_500 = b0 + b1 * 500
+Y_500
+```
+
+    ## [1] 5.767
+
+``` r
+Y_1000 = b0 + b1 * 1000
+Y_1000
+```
+
+    ## [1] 10.267
+
+``` r
+Y_5000 = b0 + b1 * 2000
+Y_5000 
+```
+
+    ## [1] 19.267
+
+5) Plotting the Linear Regression Line
+--------------------------------------
+
+``` r
+plot(points, sal_millions, xlab = "Points", ylab = "Salary in Millions", main = "Points and Salary")
+lines(lowess(points, sal_millions), col = "red")
+abline(a = b0, b = b1, col = "blue", lwd = 1.5)
+text(2300, 30, "lowess", col= "red")
+text(2300, 17, "regression", col = "blue")
+```
+
+![](hw01-robby-grewal_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-7-1.png)
+
+6) Regression Residuals and Coefficient of Determination R2
+-----------------------------------------------------------
+
+``` r
+#Vector of Residuals
+summary(sal_millions - Y)
+```
+
+    ##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+    ## -14.75500  -2.67700  -1.01800   0.00024   2.55300  18.96300
+
+``` r
+# Residual Sum of Squares
+rss <- sum((sal_millions - Y)^2)
+rss
+```
+
+    ## [1] 11321.04
+
+``` r
+#Total Sum of Squares
+tss <- sum((sal_millions - mean_y)^2)
+tss
+```
+
+    ## [1] 19005.91
+
+``` r
+#Coefficient of Determination
+r2 <- 1 - (rss/tss)
+r2
+```
+
+    ## [1] 0.4043409
+
+7) Exploring Position and Experience
+------------------------------------
+
+``` r
+#Scatterplot of Experience and Salary
+plot(experience, sal_millions, xlab = "Years of Experience", ylab = "Salary", main = "Experience and Salary")
+```
+
+    ## Warning in xy.coords(x, y, xlabel, ylabel, log): NAs introduced by coercion
+
+``` r
+lines(lowess(exp, sal_millions), col = "red")
+```
+
+![](hw01-robby-grewal_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-1.png)
+
+``` r
+library('scatterplot3d')
+scatterplot3d(points, exp, sal_millions, xlab = "points", zlab = "Salary", ylab = "Experience", main = "3D Scatterplot")
+```
+
+![](hw01-robby-grewal_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-2.png)
+
+``` r
+#Boxplot
+boxplot(sal_millions ~ position, xlab = "Position", ylab = "Salary in millions", main = "Boxplot of Salary")
+```
+
+![](hw01-robby-grewal_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-3.png)

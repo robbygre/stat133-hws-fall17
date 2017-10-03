@@ -11,7 +11,7 @@ load("~/stat133/stat133-hws-fall17/hw01/data/nba2017-salary-points.RData")
 ls()
 ```
 
-# Research Question
+# Research Question_
 
 ## 1) A Bit of Data Preprocessing 
 
@@ -28,10 +28,161 @@ exp_int
 typeof(exp_int)
 ```
 
-# Position as a Factor
+### Position as a Factor
 ```{r}
 pos_factor <- factor(position, labels = c("center", "small_fwd", "power_fwd", "shoot_guard", "point_guard"))
 table(pos_factor)
 ```
- # Scatterplot
+ ## 2) Scatterplot
+```{r}
+plot(points, sal_millions, xlab = "Points", ylab = "Salary (in Millions)", main = "Points and Salary")
+```
+
+## 3) Correlation between Points and Salary
+
+```{r}
+# number of individuals 
+n = 441
+
+# mean of variable X (points)
+mean_x = sum(points)/n
+mean_x
+
+# mean of variable Y (salary)
+mean_y = sum(sal_millions)/n
+mean_y
+
+# var(X): variance of X
+var_x = sum((points - mean_x)^2)/(n-1)
+var_x
+
+# var(Y): variance of y
+var_y = sum((sal_millions - mean_y)^2)/(n-1)
+var_y
+
+# sd(X): standard deviation of X
+sd_x = sqrt(var_x)
+sd_x
+
+#sd(Y): standard deviation of Y
+sd_y = sqrt(var_y)
+sd_y
+
+#cov(X,Y): covariance between X and Y
+cov_xy = sum((points - mean_x) * (sal_millions - mean_y)) / (n - 1)
+cov_xy
+
+#cor(X,Y): correlation between X  and Y
+cor_xy = cov_xy/(sd_x * sd_y)
+cor_xy
+
+cor(points, salary)
+```
+
+
+## 4) Simple Linear Regression
+
+```{r}
+b1 = round(cor_xy * (sd_y / sd_x), digit = 3)
+b1
+b0 = round(mean_y - (b1 * mean_x), digit = 3)
+b0
+Y = b0 + (b1 * points)
+summary(Y)
+
+b0 + b1 * 0
+Y_100 = b0 + (b1 * 100)
+Y_100
+Y_500 = b0 + b1 * 500
+Y_500
+Y_1000 = b0 + b1 * 1000
+Y_1000
+Y_5000 = b0 + b1 * 2000
+Y_5000 
+
+```
+
+## 5) Plotting the Linear Regression Line 
+
+```{r}
+plot(points, sal_millions, xlab = "Points", ylab = "Salary in Millions", main = "Points and Salary")
+lines(lowess(points, sal_millions), col = "red")
+abline(a = b0, b = b1, col = "blue", lwd = 1.5)
+text(2300, 30, "lowess", col= "red")
+text(2300, 17, "regression", col = "blue")
+```
+
+
+
+## 6) Regression Residuals and Coefficient of Determination R2
+
+```{r}
+#Vector of Residuals
+summary(sal_millions - Y)
+
+# Residual Sum of Squares
+rss <- sum((sal_millions - Y)^2)
+rss
+
+#Total Sum of Squares
+tss <- sum((sal_millions - mean_y)^2)
+tss
+
+#Coefficient of Determination
+r2 <- 1 - (rss/tss)
+r2
+
+```
+
+## 7) Exploring Position and Experience
+
+```{r}
+#Scatterplot of Experience and Salary
+plot(experience, sal_millions, xlab = "Years of Experience", ylab = "Salary", main = "Experience and Salary")
+lines(lowess(exp, sal_millions), col = "red")
+
+library('scatterplot3d')
+scatterplot3d(points, exp, sal_millions, xlab = "points", zlab = "Salary", ylab = "Experience", main = "3D Scatterplot")
+
+
+#Boxplot
+boxplot(sal_millions ~ position, xlab = "Position", ylab = "Salary in millions", main = "Boxplot of Salary")
+```
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
