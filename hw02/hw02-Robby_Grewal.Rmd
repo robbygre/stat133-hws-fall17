@@ -1,0 +1,156 @@
+---
+title: "hw02-Robby-Grewal Basics of Data Frames"
+output: github_document
+---
+
+
+# Import the Data in R_
+```{r}
+library(dplyr)
+```
+
+#### .csv
+
+```{r}
+
+dat1 <- read.csv('~/stat133/stat133-hws-fall17/hw02/data/nba2017-player-statistics.csv',
+                 colClasses = c(Player="character",
+                               Team="character",
+                               Experience="character",
+                               Position= "factor", 
+                               Salary="double"))
+
+# Check the Structure
+str(dat1)
+```
+
+#### _csv
+
+```{r}
+library(readr)
+dat2 <- read_csv('~/stat133/stat133-hws-fall17/hw02/data/nba2017-player-statistics.csv',
+                 col_types = list(Player = col_character(),
+                                  Team = col_character(), 
+                                  Experience = col_character(), 
+                                  Position = col_factor(c(
+                                    "C", "PF", "PG","SF", "SG")), 
+                                  Salary= col_double()))
+
+str(dat2)
+
+```
+
+# Right After Importing the Data_
+
+#### Replacing R with 0 and Integer Conversion in .csv and _csv
+
+```{r}
+dat1$Experience <- as.integer(replace(dat1$Experience,
+                                     dat1$Experience == 'R', 0))
+```
+
+```{r}
+dat2$Experience <-  as.integer(replace(dat2$Experience,
+                                       dat2$Experience == 'R', 0))
+```
+
+# Performance of Players_
+
+##### Adding Variables and EFF
+
+```{r}
+dat1$Missed_FG <- dat1$FGA - dat1$FGM
+dat1$Missed_FT <- dat1$FTA - dat1$FTM
+dat1$PTS <- (dat1$Points3 *3 ) + (dat1$Points2 * 2) + dat1$FTM
+dat1$REB <- dat1$OREB + dat1$DREB
+dat1$MPG <- (dat1$MIN / dat1$GP)
+dat1$EFF <- ((dat1$PTS + dat1$REB + dat1$AST + 
+              dat1$STL+ dat1$BLK - dat1$Missed_FG -
+             dat1$Missed_FT - dat1$TO) / dat1$GP)
+
+
+```
+
+
+#### Summary of EFF
+
+```{r}
+summary(dat1$EFF)
+```
+
+
+#Histogram of EFF & Rest of This Problem
+
+```{r}
+hist(dat1$EFF, xlab = "EFF", ylab = "Frequency", 
+     main = "Histogram of Efficiency", col= "blue")
+
+# Top 10 by decreasing EFF
+top_ten <- dat1[order(-dat1$EFF),] [1:10,c("Player", "Team", "Salary","EFF")]
+top_ten
+
+# Negative EFF players
+filter(dat1, EFF < 0)
+
+# Use the function cor() to compute the correlation coefficients between EFF and all the variables used in the EFF formula
+PTS = cor(dat1$EFF, dat1$PTS)
+REB = cor(dat1$EFF, dat1$REB)
+AST = cor(dat1$EFF, dat1$AST)
+STL = cor(dat1$EFF, dat1$STL)
+BLK = cor(dat1$EFF, dat1$BLK)
+Missed_FG = cor(dat1$EFF, -dat1$Missed_FG)
+Missed_FT = cor(dat1$EFF, -dat1$Missed_FT)
+TO = cor(dat1$EFF, dat1$TO)
+GP = cor(dat1$EFF, dat1$GP)
+
+# Correlation Between Player Stats and EFF
+correlation = c(PTS = cor(dat1$EFF, dat1$PTS), 
+                REB = cor(dat1$EFF, dat1$REB), 
+                AST = cor(dat1$EFF, dat1$AST),
+                STL = cor(dat1$EFF, dat1$STL),
+                BLK = cor(dat1$EFF, dat1$BLK),
+                Missed_FG = -cor(dat1$EFF, dat1$Missed_FG),
+                Missed_FT = -cor(dat1$EFF, dat1$Missed_FT),
+                TO = -cor(dat1$EFF, dat1$TO),
+                GP = cor(dat1$EFF, dat1$GP))
+
+sorted_correlation = sort(correlation, decreasing = TRUE)
+barplot(sorted_correlation, main = 'Correlation between Player Stats and EFF', cex.names = .60)
+
+```
+
+# Efficiency and Salary
+```{r}
+#Scatterplot
+plot(dat1$EFF, dat1$Salary, main = "Efficiency and Salary", xlab = "Efficiency", ylab =  "Salary (in Millions)")
+lines(lowess(dat1$EFF, dat1$Salary), col = 'red')
+
+#Correlation
+cor(dat1$EFF, dat1$Salary)
+#There is a positive correlation between player efficiency and salary
+
+#Player Data Frame
+players2 <- dat1[dat1$MPG > 20,]
+
+
+#Scatterplot
+plot(players2$EFF, players2$Salary, main = "Efficiency and Salary in More Established Players", xlab = "Efficiency", ylab = "Salary (in Millions)")
+lines(lowess(players2$EFF, players2$Salary), col = 'red')
+cor(players2$EFF, players2$Salary)
+#Less correlation between salary and efficiency of more established players
+```
+
+
+#Comments and Reflection_
+Overall, this homework was pretty straightforward, but it was a little time consuming for me to look up all the correct ways to use the functions, as I still don't feel like I have a very natural grasp of R at this point. It took me almost 8 hours to complete, and I worked with friends in the class to figure out how to tackle certain aspects such as the read.csv and read_csv functions. 
+
+
+
+
+
+
+
+
+
+
+
