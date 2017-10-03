@@ -1,0 +1,37 @@
+---
+title: "hw01-robby-grewal"
+output: github_document
+---
+
+```{r}
+#load the data file
+load("~/stat133/stat133-hws-fall17/hw01/data/nba2017-salary-points.RData")
+
+#list the available objects
+ls()
+```
+
+# Research Question
+
+## 1) A Bit of Data Preprocessing 
+
+```{r}
+#Salary in Millions
+sal_millions <-  round(salary/(10^6), digit = 2)
+sal_millions
+
+#Replace R with 0
+exp <- replace(experience, experience == 'R', 0)
+exp_int <- as.integer(exp)
+exp_int
+
+typeof(exp_int)
+```
+
+# Position as a Factor
+```{r}
+pos_factor <- factor(position, labels = c("center", "small_fwd", "power_fwd", "shoot_guard", "point_guard"))
+table(pos_factor)
+```
+ # Scatterplot
+ 
