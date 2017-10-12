@@ -27,12 +27,13 @@ Consider the following mathematical functions:
 Write two functions `f()` and `g()` based on the previous equations.
 
 ```{r}
-# your function f()
+f <- function(x) {x^2}
 
 ```
 
 ```{r}
 # your function g()
+g <- function(x) {2*x +5}
 
 ```
 
@@ -40,7 +41,7 @@ Write two functions `f()` and `g()` based on the previous equations.
 
 Test your functions with:
 
-```r
+```{r}
 f(2)
 f(-5)
 
