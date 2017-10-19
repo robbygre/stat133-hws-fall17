@@ -33,7 +33,7 @@ f <- function(x) {x^2}
 
 ```{r}
 # your function g()
-g <- function(x) {2*x +5}
+g <- function(x) {2*x + 5}
 
 ```
 
@@ -56,17 +56,22 @@ Write code to create the following composite functions:
 
 ```{r}
 # your function fog()
-
+fog <- function(x){
+  f(g(x))
+}
 ```
 
 ```{r}
 # your function gof()
+gof <- function(x){
+  g(f(x))
+}
 
 ```
 
 Test your composite functions with:
 
-```r
+```{r}
 fog(2)
 fog(-5)
 
@@ -90,6 +95,7 @@ returns the length of the hypotenuse:
 
 ```{r}
 # your pythagoras() function
+pythagoras <- function(a, b) {sqrt(a^2 + b^2)}
 
 ```
 
@@ -97,6 +103,7 @@ Test your `pythagoras()` with two leg values: `pythagoras(3, 4)`
 
 ```{r}
 # your test
+pythagoras(3,4)
 
 ```
 
@@ -104,6 +111,8 @@ Modify your function `pythagoras()` so that argument `b` takes the same value of
 
 ```{r}
 # your test
+pythagoras2 <- function(a) {sqrt(a^2 + a^2)}
+pythagoras2(5)
 
 ```
 
@@ -123,8 +132,8 @@ Write a function `miles2kms()` that converts miles into kilometers: 1 mile
 is equal to 1.6 kilometers. Give the argument a default value of 1.
 
 ```{r}
-miles2kms <- function() {
-  # fill in
+miles2kms <- function(x) {
+  x * 1.6
 }
 ```
 
@@ -142,6 +151,12 @@ and then from 10 to 100 in 10 mile steps. The second column corresponds to kms.
 |  ...  | ... |
 | 100   | 160 |
 
+```{r}
+miles <- c(1:9, seq(from = 10, to = 100, by = 10))
+df <- data.frame("Miles" = miles, "Kms" = miles2kms(miles))
+df
+```
+
 
 ### Gallons to Liters, and viceversa
 
@@ -150,6 +165,9 @@ is equal to 3.78541 liters:
 
 ```{r}
 # your gallons2liters() function
+gallons2liters <- function(x){
+  x * 3.78541
+}
 
 ```
 
@@ -157,6 +175,9 @@ Use `gallon2liters()` to make an inverse function `liters2gallons()`.
 
 ```{r}
 # your liters2gallons() function
+liters2gallons <- function(x){
+  x/3.78541
+}
 
 ```
 
@@ -173,6 +194,12 @@ and then from 10 to 100 in 10 liter steps. The second column corresponds to gall
 |  20    | 5.283444  |
 |  ...   | ...       |
 | 100    | 26.417218 |
+
+```{r}
+liters <- c(1:9, seq(from = 10, to = 100, by = 10))
+df2 <- data.frame("Liters" = liters, "Gallons" = liters2gallons(liters))
+df2
+```
 
 
 
