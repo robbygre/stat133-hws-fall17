@@ -215,6 +215,11 @@ Test the function with `seconds2years(1000000000)`
 
 ```{r}
 # your code
+seconds2years <- function(x){
+  x/31536000
+}
+
+seconds2years(1000000000)
 
 ```
 
@@ -237,7 +242,11 @@ Evaluate the function with $m = 0$, $s = 2$, and $x = 1$.
 
 ```{r}
 # your code
+gaussian <- function(x, m, s){
+  exp(1)^((-1/2) * ((x - m)/s)^2)/(s * sqrt(2 * pi))
+}
 
+gaussian(1, 0, 2)
 ```
 
 Test your `gaussian()` function and compare it with the R function `dnorm()`
@@ -261,6 +270,9 @@ Your turn:
 
 ```{r}
 # your code
+x_values <- seq(from = -4.5, to = 4.5, by = 0.1)
+y_values <- gaussian(x_values, 0, 2)
+plot(x_values, y_values, las = 1, type = "l", lwd = 2)
 ```
 
 
