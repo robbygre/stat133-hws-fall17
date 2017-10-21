@@ -259,7 +259,7 @@ dnorm(x = 1, mean = 0, sd = 2)
 Now try `gaussian()` with a vector `seq(-4.5, 4.5, by = 0.1)`, and pass the values
 to `plot()` to get a normal curve. Here's code with values obtained from `dnorm()`
 
-```{r}
+```{r}g
 # you should get a plot like this one
 x_values <- seq(from = -4.5, to = 4.5, by = 0.1)
 y_values <- dnorm(x_values, mean = 0, sd = 2)
