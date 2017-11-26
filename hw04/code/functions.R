@@ -179,19 +179,75 @@ summary_stats <- function(x){
 #output: a nicer format of stats
 
 print_stats = function(lst) {
-  names <-  names(lst)
+  names <- names(lst)
   for (i in 1:length(lst)) {
     print(paste0(format(names[i], width = 9),":", sprintf("%.4f", lst[[i]])), quote = FALSE)
   }
 }
 
+#function: rescale100()
+#description: takes numeric vector x, an xmin and xmax, and computes a rescaled vector from 0 to 100
+#input: a numeric vector x, and an x min and x max
+#output: a rescaled vector
 
+rescale100 = function(x, xmin, xmax) {
+  new_scale <- 100 * ((x - xmin) / (xmax - xmin))
+  new_scale
+}
 
+#function: drop_lowest()
+#description: takes a numeric vector of length n and returns a vector of length n - 1 by dropping the lowest value
+#input: a numeric vector
+#output: the input vector with the lowest value dropped 
 
+drop_lowest = function(x) {
+  x <- sort(x)
+  x <- x[-1]
+  x
+}
 
+#function: score_homework()
+#description: takes a numeric vector of hw scores and computes a single hw value, optionally dropping the last one
+#input: a numeric vector of hw scores
+#output: a single, average hw score
 
+score_homework = function(x, drop = FALSE){
+  if (drop == TRUE){
+    drop_lowest(x)
+  }
+  get_average(x, na.rm = TRUE)
+}
 
+#function: score_quiz()
+#description: takes a numeric vector of quiz scores and computes a single quiz value, optionally dropping the last one
+#input: a numeric vector of quiz scores
+#output: a single, average quiz score
 
+score_quiz = function(x, drop = FALSE){
+  if (drop == TRUE){
+    drop_lowest(x)
+  }
+  get_average(x, na.rm = TRUE)
+}
 
+#function: score_lab()
+#description: takes a numeric value of lab attendance and returns the lab score
+#input: a numeric value of lab attendance
+#output: lab score
 
-
+score_lab = function(x) {
+  if (x >= 11){
+    score <- 100
+  } else if (x == 10) {
+    score <- 80
+  } else if (x == 9) {
+    score <- 60
+  } else if (x == 8) {
+    score <- 40
+  } else if (x == 7) {
+    score <- 20
+  } else {
+    score <- 0
+  }
+  score
+}
