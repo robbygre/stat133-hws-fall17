@@ -8,6 +8,16 @@ remove_missing = function(x) {
   x[!is.na(x)]
 }
 
+
+#function to check for numeric vectors
+check_numeric = function(x){
+  for (i in x){
+    if (!is.numeric(i)) {
+      stop("Vector must be numeric")
+    }
+  }
+}
+
 #function: get_minimum()
 #description: returns the minimum value of a numeric vector
 #input: a vector
@@ -17,11 +27,7 @@ get_minimum = function(x, na.rm = FALSE) {
   if (na.rm == TRUE ) {
     x <- remove_missing(x)
   }
-  for (i in x){
-    if (!is.numeric(i)) {
-      stop("Vector must be numeric")
-    }
-  }
+  check_numeric(x)
   x <- sort(x)
   return (x[1])
 }
@@ -35,11 +41,7 @@ get_maximum = function(x, na.rm = FALSE) {
   if (na.rm == TRUE ) {
     x <- remove_missing(x)
   }
-  for (i in x){
-    if (!is.numeric(i)) {
-      stop("Vector must be numeric")
-    }
-  }
+  check_numeric(x)
   x <- sort(x, decreasing = TRUE)
   return (x[1])
 }
@@ -49,7 +51,147 @@ get_maximum = function(x, na.rm = FALSE) {
 #input: a numeric vector
 #output: the range of the vector
 
-get_range = function(x, na)
+get_range = function(x, na.rm = FALSE) {
+  if (na.rm == TRUE) {
+    x <- remove_missing(x)
+  }
+  check_numeric(x)
+  range <- get_maximum(x) - get_minimum(x)
+  return (range)
+}
+
+#function: get_median()
+#description: calculates median of numeric vector
+#input: numeric vector
+#output: median of input vector
+
+get_median = function(x, na.rm = TRUE){
+  if (na.rm == TRUE) {
+    x <- remove_missing(x)
+  }
+  check_numeric
+  x <- sort(x)
+  if (length(x) %% 2 != 0) {
+    median <- x[(length(x) +1) / 2]
+  } else {
+    median <- (x[length(x) / 2] + x[(length(x) + 2) / 2 ]) / 2
+  }
+  median
+}
+
+#function: get_average()
+#description: get the average of a neumeric vector
+#input: a numeric vector
+#output: average of the input vector
+
+get_average = function(x, na.rm = FALSE) {
+  if (na.rm == TRUE) {
+    x <- remove_missing(x)
+  }
+  check_numeric(x)
+  total <- 0
+  for (i in x) {
+    total <-  total + i
+  }
+  average <- (total / length(x))
+  return (average)
+}
+
+#function: get_stdev()
+#description: returns the standared deviation of the values in a numeric vector
+#input: a numeric vector
+#output: standard deviation of input vector
+
+get_stdev = function(x, na.rm = FALSE) {
+  if (na.rm == TRUE) {
+    x <- remove_missing(x)
+  }
+  ave <- get_average(x, na.rm == TRUE)
+  count <- 0
+  for (i in x) {
+    count <- count + (i-ave)^2
+  }
+  stdev <- sqrt(count/(length(x) -1))
+  return (stdev)
+}
+
+
+#function: get_quartile1()
+#description: get the first quartile of a numeric vector
+#input: numeric vector
+#output: first quartile of input vector
+
+get_quartile1 = function(x, na.rm = FALSE){
+  if(na.rm == TRUE) {
+    x <- remove_missing(x)
+  }
+  check_numeric(x)
+  return(quantile(x, probs = 0.25))
+}
+
+#function: get_quartile3()
+#description: get the third quartile of a numeric vector
+#input: numeric vector
+#output: third quartile of input vector
+
+get_quartile3 = function(x, na.rm = FALSE){
+  if(na.rm == TRUE) {
+    x <- remove_missing(x)
+  }
+  check_numeric(x)
+  return(quantile(x, probs = 0.75))
+}
+
+#function: count_missing()
+#description: takes a numeric vector and counts the number of NA values
+#input: numeric vector
+#output: # of NA values in input vector
+
+count_missing = function(x){
+  count <- length(x) - length(remove_missing(x))
+  return (count)
+}
+
+#function: summary_stats()
+#description: takes a numeric vector and returns summary statistics
+#input: numeric vector
+#output: summary stats of the numeric vector
+
+summary_stats <- function(x){
+  summary <- list(minimum = get_minimum(x, na.rm == TRUE), 
+                percent10 = quantile(x, prob = .1, na.rm = TRUE),
+                quartile1 = get_quartile1(x, na.rm == TRUE),
+                median = get_median(x, na.rm ==TRUE),
+                mean = get_average(x, na.rm == TRUE),
+                quartile3 = get_quartile3(x, na.rm == TRUE),
+                percent90 = quantile(x, prob = .9, na.rm = TRUE),
+                maximum = get_maximum(x, na.rm == TRUE),
+                range = get_range(x, na.rm == TRUE),
+                stdev = get_stv(x, na.rm == TRUE),
+                missing = count_missing(x)
+  )
+  summary
+}
+
+#function: print_stats()
+#description: prints summary stats in a nicer format
+#input: a list of summary stats
+#output: a nicer format of stats
+
+print_stats = function(lst) {
+  names <-  names(lst)
+  for (i in 1:length(lst)) {
+    print(paste0(format(names[i], width = 9),":", sprintf("%.4f", lst[[i]])), quote = FALSE)
+  }
+}
+
+
+
+
+
+
+
+
 
 
 
