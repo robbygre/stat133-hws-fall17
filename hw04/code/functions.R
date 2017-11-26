@@ -9,7 +9,7 @@ remove_missing = function(x) {
 }
 
 
-#function to check for numeric vectors
+#function to check for numeric vectors (helper function)
 check_numeric = function(x){
   for (i in x){
     if (!is.numeric(i)) {
