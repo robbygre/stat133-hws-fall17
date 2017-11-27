@@ -251,3 +251,31 @@ score_lab = function(x) {
   }
   score
 }
+
+#Helper function for clean-data-scipt for getting grades
+grader = function(x) {
+  if (x < 50) {
+    grade <- 'F'
+  } else if (x < 60) {
+    grade <- 'D'
+  } else if (x < 70) {
+    grade <- 'C-'
+  } else if (x < 77.5) {
+    grade <- 'C'
+  } else if (x < 79.5) {
+    grade <- 'C+' 
+  } else if (x < 82) {
+    grade <- 'B-'
+  } else if (x < 86) {
+    grade <- 'B'
+  } else if (x < 88) {
+    grade <- 'B+'
+  } else if (x < 90) {
+    grade <- 'A-'
+  } else if (x < 95) {
+    grade <-  'A'
+  } else {
+    grade <- 'A+'}
+  return (grade)
+}
+

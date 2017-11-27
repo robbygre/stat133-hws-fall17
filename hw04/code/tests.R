@@ -22,7 +22,6 @@ test_that("remove_missing removes NA values from a numeric vector", {
   expect_that(remove_missing(vec1), equals(vec1))
 })
 
-
 #Function 2 Tests
 
 context("get_minimum")
