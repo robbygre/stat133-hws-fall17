@@ -12,7 +12,7 @@ remove_missing = function(x) {
 #function to check for numeric vectors (helper function)
 check_numeric = function(x){
   for (i in x){
-    if (!is.numeric(i)) {
+    if (is.na(i)) {
       stop("Vector must be numeric")
     }
   }
@@ -158,16 +158,16 @@ count_missing = function(x){
 #output: summary stats of the numeric vector
 
 summary_stats <- function(x){
-  summary <- list(minimum = get_minimum(x, na.rm == TRUE), 
+  summary <- list(minimum = get_minimum(x, na.rm = TRUE), 
                 percent10 = quantile(x, prob = .1, na.rm = TRUE),
-                quartile1 = get_quartile1(x, na.rm == TRUE),
-                median = get_median(x, na.rm ==TRUE),
-                mean = get_average(x, na.rm == TRUE),
-                quartile3 = get_quartile3(x, na.rm == TRUE),
+                quartile1 = get_quartile1(x, na.rm = TRUE),
+                median = get_median(x, na.rm =TRUE),
+                mean = get_average(x, na.rm = TRUE),
+                quartile3 = get_quartile3(x, na.rm = TRUE),
                 percent90 = quantile(x, prob = .9, na.rm = TRUE),
-                maximum = get_maximum(x, na.rm == TRUE),
-                range = get_range(x, na.rm == TRUE),
-                stdev = get_stv(x, na.rm == TRUE),
+                maximum = get_maximum(x, na.rm = TRUE),
+                range = get_range(x, na.rm = TRUE),
+                stdev = get_stdev(x, na.rm = TRUE),
                 missing = count_missing(x)
   )
   summary
@@ -213,7 +213,7 @@ drop_lowest = function(x) {
 
 score_homework = function(x, drop = FALSE){
   if (drop == TRUE){
-    drop_lowest(x)
+    x <- drop_lowest(x)
   }
   get_average(x, na.rm = TRUE)
 }
@@ -225,7 +225,7 @@ score_homework = function(x, drop = FALSE){
 
 score_quiz = function(x, drop = FALSE){
   if (drop == TRUE){
-    drop_lowest(x)
+    x <- drop_lowest(x)
   }
   get_average(x, na.rm = TRUE)
 }
