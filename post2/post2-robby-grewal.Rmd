@@ -1,0 +1,135 @@
+---
+Title: "Post 2 - Visualization of Stock Prices"
+Subtitle: "Stat 133 Fall 17"
+Author: Robby Grewal
+output: html_document
+---
+
+```{r}
+library(quantmod)
+options("getSymbols.warning4.0"=FALSE)
+
+```
+
+# R and Finance: Using Quantmod to better understand Stocks
+
+## Introduction
+One of my interests is finance and investing, and after starting this course, I wondered about how I could use R to better understand financial data and the movement of stock prices. 
+R packages we have used in this course such as ggplot and ggvis weren't the most useful available to visualize financial data.I came across a R package called Quantmod. Quantmod is meant 
+to "assist the quantitative trader in the development, testing, and deployment of statistically based trading models." This was built specifically to provide a better framework and workflow 
+for financial data analysis and visualization. I will go over the basics of quantmod and show how to use this package visualize financial data in an informative way.
+
+#Getting Data using Quantmod
+
+Quantmod can load financial data from the web from a variety of sources, including online ones. It can access Yahoo Finance, Google Finance, local data, .csv files, Federal Reserve Bank of St. Louis economic files, and more.
+
+```{r}
+#Loading Data 
+getSymbols("STZ", src = "google") #loading data from stock "STZ", from Google finance
+getSymbols("VOOG", src = "yahoo") #Stock AAPL from Yahoo Finance
+
+#Loading and saving the data 
+setSymbolLookup(STZ = 'google', VOOG = 'yahoo')
+setSymbolLookup("VOOG", src = "google")
+saveSymbolLookup("symbols.rda") # Save the Data
+loadSymbolLookup("symbols.rda")
+getSymbols(c("STZ", "VOOG"))
+
+
+#Look at the data 
+head(STZ)
+```
+This will show the stocks opening, closing, highest, and lowest points for every day.
+
+## Data Handling Functions 
+
+### Looking at variables
+Recently, quantmod has added new data handling features to make quickly looking at various variables easier. Once you load the data, you can load variables using the following functions.
+Op(): opening price
+Cl(): closing price
+Lo(): lowest price
+Hi(): highest price
+Vo(): volume
+
+### Subsetting by Time and Date
+Subsetting by time is possible to look at certain time periods
+```{r}
+head(VOOG['2014']) #Look at the 2014 data from the VOOG stock, a ETF that tracks the S&P 500
+head(VOOG['2014-5']) #Look at data from 05-2014
+head(VOOG['2014::2016']) #Data from 2014 through 2016
+```
+
+```{r}
+head(Cl(VOOG)) # Closing price
+
+#combine functions to look at price change between data points
+head(OpCl(VOOG)) #percent change from open to close
+```
+
+
+# Charting Data 
+Quantmod allows you to use various charts to visualize any data that you load. The chartSeries function allows for very useful visualization in different forms, such as line charts, 
+candle charts, and bar charts. 
+
+```{r}
+barChart(STZ)
+barChart(VOOG)
+```
+
+The X-axis represents time, and the y-axis represents the stocks price. It also shows the volume of stock that was traded 
+
+We can select a certain variable and chart it. Here we will choose the volume of the Constellation Brand (STZ) stock.
+```{r}
+#setting a variable to volume of STZ
+stz_volume = Vo(STZ)
+plot(stz_volume)
+```
+
+We can also use quantmod to add various technical indicators using the chartSeries function.
+```{r}
+chartSeries(VOOG) #load the chart
+addWMA() #Add weighted moving average
+addADX() #add directional movement indicator
+```
+
+You can also use other styles of charts, such as Candle Charts 
+
+```{r}
+candleChart(VOOG, multi.col = TRUE, theme = 'white')
+
+```
+
+A more useful extention of this is to chart a subsetted time period of the data.
+
+```{r}
+candleChart(VOOG, subset = "2016-1::2016-6", multi.col = TRUE, theme = 'white') #Subsetted from January 2014 to December 2016
+```
+
+This allows us to get a closer look at any time period. 
+
+Conclusion
+Quantmod allows us to access financial data from the web and manipulate data in our console. There are many functions and chart additions that allow for analysis and visualization of that
+analysis very quickly. We can use this when researching stocks.
+
+Resources:
+- [R-Bloggers](https://www.r-bloggers.com/a-guide-on-r-quantmod-package-how-to-get-started/)
+- [Charting Examples](https://www.quantmod.com/examples/charting/)
+- [Intro to QuantMod](https://www.quantmod.com/examples/charting/)
+- [Documentation](https://www.quantmod.com/documentation/00Index.html)
+- [Data Handling](https://www.quantmod.com/examples/data/)
+- [Cran resource](https://cran.r-project.org/web/packages/quantmod/quantmod.pdf)
+- [http://amunategui.github.io/wallstreet/]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
